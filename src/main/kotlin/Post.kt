@@ -1,53 +1,85 @@
 internal data class Post(
-
-    internal val ownerId: Int,
-    internal var fromId: Int,
-    internal var createdBy: Int,
-    internal var text: String,
-    internal var replyOwnerId: Int,
-    internal var replyPostId: Int,
-    internal var friendsOnly: Boolean,
-    internal var postType: String, //Type of the post, can be: post, copy, reply, postpone, suggest.
-    internal var signerId: Int,
-    internal var canPin: Boolean,
-    internal var canDelete: Boolean,
-    internal var canEdit: Boolean,
-    internal var isPinned: Boolean,
-    internal var markedAsAds: Boolean,
-    internal var isFavorite: Boolean
-
+    val ownerId: Int,
+    var fromId: Int,
+    var createdBy: Int,
+    var text: String,
+    var replyOwnerId: Int,
+    var replyPostId: Int,
+    var friendsOnly: Boolean,
+    var postType: String, //Type of the post, can be: post, copy, reply, postpone, suggest.
+    var signerId: Int,
+    var canPin: Boolean,
+    var canDelete: Boolean,
+    var canEdit: Boolean,
+    var isPinned: Boolean,
+    var markedAsAds: Boolean,
+    var isFavorite: Boolean
 ) {
-    internal var id: Int = -1
+    var id: Int = -1
     private val date: Int = (System.currentTimeMillis() * 1000).toInt()
-    internal var copyHistory = emptyArray<Post>()
+    var copyHistory = emptyArray<Post>()
 
-    internal var comments = Comments()
-    internal var likes = Likes()
-    internal var reposts = Reposts()
+    var comments = Comments()
+    var likes = Likes()
+    var reposts = Reposts()
 
     internal inner class Comments() {
-        internal var count: UInt = 0u
-        internal var canPost: Boolean = true
-        internal var groupsCanPost: Boolean = true
+        var count: UInt = 0u
+        var canPost: Boolean = true
+        var groupsCanPost: Boolean = true
     }
 
     internal inner class Likes() {
-        internal var count: UInt = 0u
-        internal var userLikes: Boolean = true
-        internal var canLike: Boolean = true
-        internal var canPublish: Boolean = true
+        var count: UInt = 0u
+        var userLikes: Boolean = true
+        var canLike: Boolean = true
+        var canPublish: Boolean = true
     }
 
     internal inner class Reposts() {
-        internal var count: UInt = 0u
-        internal var userReposted: Boolean = true
+        var count: UInt = 0u
+        var userReposted: Boolean = true
     }
+
+    internal inner class Geo(val type: String, val coordinates: String) {
+
+        internal inner class Place(
+            val latitude: Int,
+            val longitude: Int,
+            val icon: String,
+            val country: String,
+            val city: String
+        ) {
+            var id: Int? = null
+            var title: String? = null
+            var created: Int? = null
+
+            //If place id added as a checkin, place object has additional fields:
+            var type: Int? = null
+            var groupId: Int? = null
+            var groupPhoto: String? = null
+            var checkIns: Int? = null
+            var updated: Int? = null
+            var address: Int? = null
+
+        }
+    }
+
+    internal inner class PostSource(
+        val type: String,
+        val url: String
+    ) {
+        var platform: String? = null
+        var data: String? = null
+    }
+
+    var attachments = emptyArray<Attachments>()
 }
 
 internal object WallService {
-    internal var posts = emptyArray<Post>()
+    var posts = emptyArray<Post>()
 
-    internal fun add(post: Post): Post {
+    fun add(post: Post): Post {
         post.id = if (posts.isNotEmpty()) {
             (posts.lastIndex + 1)
         } else 0

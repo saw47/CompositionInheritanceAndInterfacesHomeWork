@@ -9,11 +9,14 @@ internal class Photo(
     _height: Int,
     _type: String,
     _url: String
-) : Attachments {
+) : Attachments, AbleAttachToComment {
     override val type: String = "photo"
-    internal val internalPhoto: InternalPhoto = InternalPhoto(
+    private val photo: InternalPhoto = InternalPhoto(
         _id, _albumId, _ownerId, _userId, _text, _date, _width, _height, _type, _url
     )
+    override fun returnAttachableMediaId(): String {
+        return photo.mediaId.toString()
+    }
 
     inner class InternalPhoto(
         private val id: Int,
@@ -26,7 +29,8 @@ internal class Photo(
         private val originalHeight: Int,
         _type: String,
         _url: String
-    ) {
+    ): InternalMediaToCommentAttachable {
+        override val mediaId: Int = id
 
         internal val sizes = arrayOf(PhotoSizes(_type, _url, originalWidth, originalHeight))
 
@@ -47,7 +51,7 @@ internal class PostedPhoto(
     _photo604: String,
 ) : Attachments {
     override val type: String = "posted_photo"
-    internal val internalPostedPhoto = InternalPostedPhoto(_id, _userId, _photo130, _photo604)
+    internal val postedPhoto = InternalPostedPhoto(_id, _userId, _photo130, _photo604)
 
     inner class InternalPostedPhoto(
         private val id: Int,
@@ -64,7 +68,7 @@ internal class Graffiti(
     _photo604: String,
 ) : Attachments {
     override val type: String = "graffiti"
-    internal val internalGraffiti = InternalGraffiti(_id, _ownerId, _photo130, _photo604)
+    internal val graffiti = InternalGraffiti(_id, _ownerId, _photo130, _photo604)
 
     inner class InternalGraffiti(
         private val id: Int,
@@ -81,7 +85,7 @@ internal class App(
     _photo604: String,
 ) : Attachments {
     override val type: String = "app"
-    internal val internalApp = InternalApp(_id, _name, _photo130, _photo604)
+    internal val app = InternalApp(_id, _name, _photo130, _photo604)
 
     inner class InternalApp(
         private val id: Int,
@@ -99,7 +103,7 @@ internal class PrettyCards(
     _height: Int
 ) : Attachments {
     override val type: String = "pretty_cards"
-    internal val postedPhoto = InternalPrettyCards(_cardId, _linkUrl, _title, _width, _height)
+    internal val prettyCards = InternalPrettyCards(_cardId, _linkUrl, _title, _width, _height)
 
     inner class InternalPrettyCards(
         private val cardId: String,

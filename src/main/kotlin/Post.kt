@@ -73,11 +73,50 @@ internal data class Post(
         var data: String? = null
     }
 
-    var attachments = emptyArray<Attachments>()
+    var attachments = emptyArray<AbleAttachToComment>()
 }
 
 internal object WallService {
-    var posts = emptyArray<Post>()
+    internal var posts = emptyArray<Post>()
+    internal var comments = emptyArray<Comment>()
+
+    fun createComment(comment: Comment, _postId: Int) {
+        val ownerId: Int = comment.fromId
+        val postId: Int = _postId
+        var fromGroup: UInt = 0u
+        var message: String? = null
+        val stickerId: UInt
+        val guid: Int
+        val replyToComment: Int
+        var attachments: String = ""
+        var postInPosts = -1
+
+        for (post in posts) {
+            if(post.id == postId) {
+                if (comment.attachments.isEmpty()) {
+                    if (comment.text == null) {
+                        error("aren't content Exception")
+                    } else {
+                        message = comment.text
+                    }
+                } else {
+                    var comma: String = ",";
+                    for (i: Int in 0 until comment.attachments.size) {
+                        val internalAttachments: String =
+                            comment.attachments[i].type + comment.fromId + "_" + comment.attachments[i].returnAttachableMediaId()
+                        attachments += internalAttachments
+                        if (i < (comment.attachments.size - 1)) {
+                            attachments += comma
+                        }
+                    }
+                }
+                postInPosts = 1
+                post.comments.count += 1u
+                comments += comment
+            }
+        }
+        if(postInPosts == -1) throw PostNotFoundException("Post not found")
+    }
 
     fun add(post: Post): Post {
         post.id = if (posts.isNotEmpty()) {

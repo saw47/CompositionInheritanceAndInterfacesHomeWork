@@ -1,61 +1,55 @@
-import kotlin.random.Random
+import java.time.Instant
 
-//small visual test
 fun main() {
-    val post = Post(
-        Random.nextInt(1000000),
-        Random.nextInt(1000000),
-        Random.nextInt(1000000),
-        "some text",
-        Random.nextInt(1000000),
-        Random.nextInt(1000000),
-        Random.nextBoolean(),
-        "post", //Type of the post, can be: post, copy, reply, postpone, suggest.
-        Random.nextInt(1000000),
-        Random.nextBoolean(),
-        Random.nextBoolean(),
-        Random.nextBoolean(),
-        Random.nextBoolean(),
-        Random.nextBoolean(),
-        Random.nextBoolean()
+    var testPost = Post(
+        ownerId = 106724,
+        fromId = 205445,
+        createdBy = 556933,
+        text = "Test text post bla",
+        replyOwnerId = 225666,
+        replyPostId = 558455,
+        friendsOnly = false,
+        postType = "post",
+        signerId = 447885,
+        canPin = false,
+        canDelete = false,
+        canEdit = true,
+        isPinned = false,
+        markedAsAds = false,
+        isFavorite = true
     )
-    val postTwo = Post(
-        Random.nextInt(1000000),
-        Random.nextInt(1000000),
-        Random.nextInt(1000000),
-        "some text",
-        Random.nextInt(1000000),
-        Random.nextInt(1000000),
-        Random.nextBoolean(),
-        "post", //Type of the post, can be: post, copy, reply, postpone, suggest.
-        Random.nextInt(1000000),
-        Random.nextBoolean(),
-        Random.nextBoolean(),
-        Random.nextBoolean(),
-        Random.nextBoolean(),
-        Random.nextBoolean(),
-        Random.nextBoolean()
+
+    var oneMoreTestPost = Post(
+        ownerId = 111222,
+        fromId = 223332,
+        createdBy = 456975,
+        text = "it is another post!",
+        replyOwnerId = 334443,
+        replyPostId = 332223,
+        friendsOnly = false,
+        postType = "post",
+        signerId = 323232,
+        canPin = false,
+        canDelete = false,
+        canEdit = true,
+        isPinned = false,
+        markedAsAds = false,
+        isFavorite = true
     )
-    println(post)
-    println(post.comments.count)
-    println(post.comments.canPost)
-    post.comments.count += 1u
-    post.comments.canPost = false
-    println(post.comments.count)
-    println(post.comments.canPost)
-    println("____________________________________________________________________")
-    WallService.add(post)
-    WallService.add(postTwo)
-    println(WallService.posts.size)
-    println(WallService.posts[post.id])
-    println("____________________________________________________________________")
-    println(WallService.posts[postTwo.id])
-    println("____________________________________________________________________")
-    println(postTwo)
-    println(postTwo.id)
-    postTwo.text = "NEW UPDATE TEXT"
-    WallService.update(postTwo)
-    println(postTwo)
-    println(postTwo.id)
+
+    WallService.add(testPost)
+    WallService.add(oneMoreTestPost)
+
+    val commentToTestPost: Comment = Comment(
+        _canPost = true,
+        _showReplyButton = true,
+        _groupsCanPost = true,
+        _isDon = true,
+        id = 554447,
+        fromId = 558998,
+        date = Instant.now().epochSecond.toInt()
+    )
+    commentToTestPost.text = "some text to test post"
+    WallService.createComment(commentToTestPost, 1)
 
 }

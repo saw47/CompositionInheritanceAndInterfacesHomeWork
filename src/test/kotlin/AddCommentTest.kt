@@ -59,6 +59,9 @@ class AddCommentTest {
 
     @Test
     fun successAddCommentToPost() {
+        WallService.posts = emptyArray()
+        WallService.comments = emptyArray()
+
         var testPost = Post(
             ownerId = 106724,
             fromId = 205445,
@@ -81,7 +84,6 @@ class AddCommentTest {
 
         val counterCommentBeforeAdd = testPost.comments.count
 
-
         val commentToTestPost = Comment(
             _canPost = true,
             _showReplyButton = true,
@@ -94,8 +96,8 @@ class AddCommentTest {
         commentToTestPost.text = "some text to test post"
         WallService.createComment(commentToTestPost, 0)
 
-        val counterCommentAfterAdd = testPost.comments.count -1u
-        assertEquals(counterCommentAfterAdd,counterCommentBeforeAdd)
+        val counterCommentAfterAdd = testPost.comments.count
+        assertEquals(counterCommentBeforeAdd,counterCommentAfterAdd - 1u)
 
         var checkCommentId: Boolean = false
         for (comment in WallService.comments) {
